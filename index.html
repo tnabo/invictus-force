@@ -1171,23 +1171,24 @@
   /* =================== CART DRAWER =================== */
   .cart-overlay {
     position: fixed; inset: 0;
-    background: rgba(13, 11, 9, 0.6);
-    backdrop-filter: blur(2px);
-    opacity: 0; visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
-    z-index: 150;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+    z-index: 199;
   }
-  .cart-overlay.show { opacity: 1; visibility: visible; }
+  .cart-overlay.open { opacity: 1; pointer-events: auto; }
 
   .cart-drawer {
     position: fixed;
-    top: 0; right: 0; bottom: 0;
-    width: 400px; max-width: 90vw;
+    top: 0; right: 0;
+    height: 100vh;
+    width: 420px; max-width: 100vw;
     background: var(--bg-panel);
-    border-left: 1px solid var(--line-hot);
-    z-index: 151;
+    border-left: 1px solid var(--line);
+    z-index: 200;
     transform: translateX(100%);
-    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: transform 0.35s ease;
     display: flex;
     flex-direction: column;
   }
@@ -1234,9 +1235,9 @@
   }
   .cart-item {
     display: grid;
-    grid-template-columns: 1fr auto auto;
+    grid-template-columns: 1fr auto auto auto;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     padding: 18px 0;
     border-bottom: 1px dashed var(--line);
   }
@@ -1286,6 +1287,17 @@
     min-width: 48px;
     text-align: right;
   }
+  .cart-remove {
+    background: transparent;
+    border: none;
+    color: var(--ink-faint);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 2px;
+    transition: color 0.2s;
+  }
+  .cart-remove:hover { color: var(--rust); }
 
   .cart-foot {
     padding: 24px;
@@ -1302,7 +1314,7 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
-  .cart-subtotal #cart-subtotal {
+  .cart-subtotal #cartSubtotal {
     font-size: 24px;
     font-weight: 800;
     color: var(--tan);
@@ -1375,6 +1387,7 @@
     .newsletter-form { flex-direction: column; }
     .newsletter-form button { padding: 14px; }
     h1 { font-size: 48px; }
+    .cart-drawer { width: 100%; }
   }
 </style>
 </head>
@@ -1858,19 +1871,19 @@
 </footer>
 
 <!-- CART DRAWER -->
-<div class="cart-overlay" id="cart-overlay"></div>
-<aside class="cart-drawer" id="cart-drawer" aria-hidden="true" aria-label="Shopping cart">
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-hidden="true" aria-label="Shopping cart">
   <div class="cart-drawer-head">
     <h3>Your Cart</h3>
     <button class="cart-close" id="cart-close" aria-label="Close cart">&times;</button>
   </div>
-  <div class="cart-items" id="cart-items"></div>
+  <div class="cart-items" id="cartItems"></div>
   <div class="cart-foot">
     <div class="cart-subtotal">
       <span>Subtotal</span>
-      <span id="cart-subtotal">$0</span>
+      <span id="cartSubtotal">$0</span>
     </div>
-    <button class="btn btn-primary cart-checkout" id="cart-checkout">Checkout (test) &rarr;</button>
+    <button class="btn btn-primary cart-checkout" id="checkoutBtn">Checkout (test) &rarr;</button>
     <p class="cart-note">Shipping &amp; tax calculated at checkout</p>
   </div>
 </aside>
@@ -1902,11 +1915,11 @@
   // ============ CART ============
   const CART_KEY = 'invictus_cart';
   const cartCountEl = document.getElementById('cart-count');
-  const cartDrawer = document.getElementById('cart-drawer');
-  const cartOverlay = document.getElementById('cart-overlay');
-  const cartItemsEl = document.getElementById('cart-items');
-  const cartSubtotalEl = document.getElementById('cart-subtotal');
-  const cartCheckoutBtn = document.getElementById('cart-checkout');
+  const cartDrawer = document.getElementById('cartDrawer');
+  const cartOverlay = document.getElementById('cartOverlay');
+  const cartItemsEl = document.getElementById('cartItems');
+  const cartSubtotalEl = document.getElementById('cartSubtotal');
+  const checkoutBtn = document.getElementById('checkoutBtn');
 
   let cart = loadCart();
 
@@ -1939,6 +1952,11 @@
     saveCart();
     renderCart();
   }
+  function removeItem(name) {
+    cart = cart.filter(i => i.name !== name);
+    saveCart();
+    renderCart();
+  }
 
   function renderCart() {
     cartCountEl.textContent = cartQty();
@@ -1960,21 +1978,23 @@
             <button class="cart-qty-btn" data-act="inc" aria-label="Increase quantity">+</button>
           </div>
           <div class="cart-item-total">$${i.price * i.qty}</div>
+          <button class="cart-remove" data-act="remove" aria-label="Remove item">&times;</button>
         </div>
       `).join('');
     }
     cartSubtotalEl.textContent = '$' + cartSubtotal();
-    cartCheckoutBtn.disabled = cart.length === 0;
+    checkoutBtn.disabled = cart.length === 0;
   }
 
   function openCart() {
+    renderCart();
     cartDrawer.classList.add('open');
-    cartOverlay.classList.add('show');
+    cartOverlay.classList.add('open');
     cartDrawer.setAttribute('aria-hidden', 'false');
   }
   function closeCart() {
     cartDrawer.classList.remove('open');
-    cartOverlay.classList.remove('show');
+    cartOverlay.classList.remove('open');
     cartDrawer.setAttribute('aria-hidden', 'true');
   }
 
@@ -1990,23 +2010,29 @@
   });
 
   cartItemsEl.addEventListener('click', (e) => {
-    const btn = e.target.closest('.cart-qty-btn');
+    const btn = e.target.closest('[data-act]');
     if (!btn) return;
     const name = btn.closest('.cart-item').dataset.name;
     const item = cart.find(i => i.name === name);
     if (!item) return;
-    setQty(name, item.qty + (btn.dataset.act === 'inc' ? 1 : -1));
+    const act = btn.dataset.act;
+    if (act === 'inc') setQty(name, item.qty + 1);
+    else if (act === 'dec') setQty(name, item.qty - 1);
+    else if (act === 'remove') removeItem(name);
   });
 
   document.getElementById('cart-btn').addEventListener('click', openCart);
   document.getElementById('cart-close').addEventListener('click', closeCart);
   cartOverlay.addEventListener('click', closeCart);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && cartDrawer.classList.contains('open')) closeCart();
+  });
 
-  cartCheckoutBtn.addEventListener('click', async () => {
+  checkoutBtn.addEventListener('click', async () => {
     if (cart.length === 0) return;
-    const original = cartCheckoutBtn.textContent;
-    cartCheckoutBtn.disabled = true;
-    cartCheckoutBtn.textContent = 'Redirecting…';
+    const original = checkoutBtn.textContent;
+    checkoutBtn.disabled = true;
+    checkoutBtn.textContent = 'Redirecting…';
     try {
       const res = await fetch('/api/checkout', {
         method: 'POST',
@@ -2019,8 +2045,8 @@
       window.location.href = data.url;
     } catch (err) {
       showToast('Checkout failed', 'Please try again');
-      cartCheckoutBtn.disabled = false;
-      cartCheckoutBtn.textContent = original;
+      checkoutBtn.disabled = false;
+      checkoutBtn.textContent = original;
     }
   });
 
