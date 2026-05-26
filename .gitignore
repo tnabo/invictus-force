@@ -11,9 +11,16 @@ desktop.ini
 *.swp
 *.swo
 
-# Node (if you add tooling later)
+# Node
 node_modules/
 package-lock.json
+
+# Env
+.env
+.env.local
+
+# Vercel
+.vercel
 
 # Logs
 *.log

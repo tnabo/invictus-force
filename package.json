@@ -1,0 +1,9 @@
+{
+  "name": "invictus-force-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Invictus Force landing page with Stripe Checkout serverless function",
+  "dependencies": {
+    "stripe": "^17.0.0"
+  }
+}
