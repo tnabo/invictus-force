@@ -7,7 +7,10 @@ const CATALOG = {
   'Outrider Tactical Leg Bag': { price: 8900, description: 'Drop-leg carry bag, MOLLE compatible' },
   'Sentinel IWB Holster': { price: 7400, description: 'IWB Kydex holster, adjustable retention' },
   'Ranger Chest Rig': { price: 11900, description: 'Tactical chest rig, 5-mag capacity' },
-  'Backwoods MOLLE Holster': { price: 4900, description: 'MOLLE-mounted holster, camo' },
+  'Centurion Plate Carrier': { price: 14900, description: 'Heavy-duty plate carrier, level IIIA capable' },
+  'Vanguard Shoulder Holster': { price: 8900, description: 'Shoulder rig holster, adjustable harness' },
+  'Sidewinder Belt Hidden Holster': { price: 6900, description: 'Concealed belt holster, low-profile' },
+  'Highway Motorcycle Tail Bag': { price: 9900, description: 'Motorcycle tail bag, weather-resistant' },
 };
 
 const SHIPPING_OPTIONS = [

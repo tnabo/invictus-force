@@ -87,12 +87,12 @@
   .logo:hover .logo-mark { color: var(--tan); }
 
   .nav-links {
-    display: flex; gap: 32px;
+    display: flex; gap: 44px;
     font-family: 'Saira Condensed', sans-serif;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
-    font-size: 13px;
+    letter-spacing: 0.15em;
+    font-size: 15px;
   }
   .nav-links a {
     color: var(--ink-dim);
@@ -146,8 +146,8 @@
     min-height: 100vh;
     padding: 120px 32px 60px;
     display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap: 60px;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
     align-items: center;
     position: relative;
     z-index: 2;
@@ -282,7 +282,7 @@
   .hero-product {
     position: relative;
     width: 100%;
-    max-width: 560px;
+    max-width: 520px;
     min-height: 560px;
     margin: 0 auto;
   }
@@ -524,13 +524,19 @@
     pointer-events: none;
   }
   .product-img {
-    width: 100%; height: 100%;
+    position: absolute; inset: 0;
     background-size: 80%;
     background-position: center;
     background-repeat: no-repeat;
-    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
     filter: drop-shadow(0 12px 24px rgba(0,0,0,0.5));
   }
+  .product-img-lifestyle {
+    opacity: 0;
+    background-size: cover;
+  }
+  .product:hover .product-img-primary { opacity: 0; }
+  .product:hover .product-img-lifestyle { opacity: 1; }
   .product:hover .product-img {
     transform: scale(1.08);
   }
@@ -801,7 +807,7 @@
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(to top, rgba(13, 11, 9, 0.95) 0%, rgba(13, 11, 9, 0.4) 50%, transparent 100%);
+      linear-gradient(to top, rgba(13, 11, 9, 0.97) 0%, rgba(13, 11, 9, 0.4) 50%, transparent 100%);
     z-index: 1;
   }
 
@@ -818,21 +824,12 @@
     filter: brightness(0.95) saturate(1);
   }
 
-  /* Hand-built SVG/gradient backgrounds for each category */
-  .cat-1 .category-bg { background: radial-gradient(ellipse at 60% 40%, #3d2f1f 0%, #1a1410 60%, #0d0b09 100%); }
-  .cat-1 .category-bg::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(90deg, transparent 95%, rgba(201, 163, 106, 0.2) 95%),
-      linear-gradient(0deg, transparent 95%, rgba(201, 163, 106, 0.1) 95%);
-    background-size: 60px 60px, 60px 60px;
-  }
-  .cat-2 .category-bg { background: radial-gradient(ellipse at 30% 60%, #2a3528 0%, #15170f 70%); }
-  .cat-3 .category-bg { background: radial-gradient(ellipse at 50% 30%, #3b2418 0%, #1a1410 70%); }
-  .cat-4 .category-bg { background: radial-gradient(ellipse at 40% 60%, #2d2620 0%, #14110e 70%); }
-  .cat-5 .category-bg { background: radial-gradient(ellipse at 60% 40%, #3a3422 0%, #1a1610 70%); }
+  /* Lifestyle image backgrounds for each category */
+  .cat-1 .category-bg { background: url('product-belt-hidden-holster-lifestyle.png') center/cover no-repeat; }
+  .cat-2 .category-bg { background: url('product-chest-rig-lifestyle.png') center/cover no-repeat; }
+  .cat-3 .category-bg { background: url('product-iwb-holster-lifestyle.png') center/cover no-repeat; }
+  .cat-4 .category-bg { background: url('product-motorcycle-tail-bag-lifestyle.png') center/cover no-repeat; }
+  .cat-5 .category-bg { background: url('product-shoulder-holster-lifestyle.png') center/cover no-repeat; }
 
   .category-content {
     position: relative;
@@ -1510,14 +1507,14 @@
       <div class="section-eyebrow">// The Lineup</div>
       <h2>Gear, <span class="accent">picked clean.</span></h2>
     </div>
-    <p class="section-sub">Four products. Each one earned its spot. No fluff, no filler, no "while you're here" upsells.</p>
+    <p class="section-sub">Seven products. Each one earned its spot. No fluff, no filler, no "while you're here" upsells.</p>
   </div>
 
   <div class="filter-bar">
-    <button class="filter-btn active" data-filter="all">All <span class="count">04</span></button>
-    <button class="filter-btn" data-filter="carry">Carry <span class="count">02</span></button>
-    <button class="filter-btn" data-filter="holsters">Holsters <span class="count">02</span></button>
-    <button class="filter-btn" data-filter="bestsellers">Bestsellers <span class="count">02</span></button>
+    <button class="filter-btn active" data-filter="all">All <span class="count">07</span></button>
+    <button class="filter-btn" data-filter="carry">Carry <span class="count">04</span></button>
+    <button class="filter-btn" data-filter="holsters">Holsters <span class="count">03</span></button>
+    <button class="filter-btn" data-filter="bestsellers">Bestsellers <span class="count">03</span></button>
   </div>
 
   <div class="products-grid">
@@ -1528,7 +1525,8 @@
         <button class="wishlist-btn" aria-label="Wishlist">
           <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg>
         </button>
-        <div class="product-img" style="background-image:url('product-tactical-leg-bag.png');"></div>
+        <div class="product-img product-img-primary" style="background-image:url('product-tactical-leg-bag.png');"></div>
+        <div class="product-img product-img-lifestyle" style="background-image:url('product-tactical-leg-bag-lifestyle.png');"></div>
       </div>
       <div class="product-info">
         <div class="product-category">// Carry · Drop Leg</div>
@@ -1551,7 +1549,8 @@
         <button class="wishlist-btn" aria-label="Wishlist">
           <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg>
         </button>
-        <div class="product-img" style="background-image:url('product-iwb-holster.png');"></div>
+        <div class="product-img product-img-primary" style="background-image:url('product-iwb-holster.png');"></div>
+        <div class="product-img product-img-lifestyle" style="background-image:url('product-iwb-holster-lifestyle.png');"></div>
       </div>
       <div class="product-info">
         <div class="product-category">// Holsters · IWB Kydex</div>
@@ -1574,7 +1573,8 @@
         <button class="wishlist-btn" aria-label="Wishlist">
           <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg>
         </button>
-        <div class="product-img" style="background-image:url('product-chest-rig.png');"></div>
+        <div class="product-img product-img-primary" style="background-image:url('product-chest-rig.png');"></div>
+        <div class="product-img product-img-lifestyle" style="background-image:url('product-chest-rig-lifestyle.png');"></div>
       </div>
       <div class="product-info">
         <div class="product-category">// Carry · Chest Rig</div>
@@ -1591,23 +1591,96 @@
     </article>
 
     <!-- PRODUCT 4 -->
-    <article class="product" data-cats="holsters" data-name="Backwoods MOLLE Holster" data-price="49">
+    <article class="product" data-cats="carry" data-name="Centurion Plate Carrier" data-price="149">
       <div class="product-img-wrap">
-        <span class="product-tag">Field</span>
+        <span class="product-tag new">New</span>
         <button class="wishlist-btn" aria-label="Wishlist">
           <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg>
         </button>
-        <div class="product-img" style="background-image:url('product-molle-holster.png');"></div>
+        <div class="product-img product-img-primary" style="background-image:url('product-chest-rig2.png');"></div>
+        <div class="product-img product-img-lifestyle" style="background-image:url('product-chest-rig2-lifestyle.png');"></div>
       </div>
       <div class="product-info">
-        <div class="product-category">// Holsters · MOLLE</div>
-        <div class="product-name">Backwoods MOLLE Holster</div>
+        <div class="product-category">// Carry · Plate Carrier</div>
+        <div class="product-name">Centurion Plate Carrier</div>
         <div class="product-rating">
-          <span class="stars">★★★★☆</span>
-          <span>4.7 · 564 reviews</span>
+          <span class="stars">★★★★★</span>
+          <span>4.9 · 247 reviews</span>
         </div>
         <div class="product-foot">
-          <div class="price"><span class="currency">$</span>49<span class="old">$65</span></div>
+          <div class="price"><span class="currency">$</span>149</div>
+          <button class="add-btn" aria-label="Add to cart">+</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- PRODUCT 5 -->
+    <article class="product" data-cats="holsters" data-name="Vanguard Shoulder Holster" data-price="89">
+      <div class="product-img-wrap">
+        <span class="product-tag new">New</span>
+        <button class="wishlist-btn" aria-label="Wishlist">
+          <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg>
+        </button>
+        <div class="product-img product-img-primary" style="background-image:url('product-shoulder-holster.png');"></div>
+        <div class="product-img product-img-lifestyle" style="background-image:url('product-shoulder-holster-lifestyle.png');"></div>
+      </div>
+      <div class="product-info">
+        <div class="product-category">// Holsters · Shoulder Rig</div>
+        <div class="product-name">Vanguard Shoulder Holster</div>
+        <div class="product-rating">
+          <span class="stars">★★★★★</span>
+          <span>4.8 · 412 reviews</span>
+        </div>
+        <div class="product-foot">
+          <div class="price"><span class="currency">$</span>89</div>
+          <button class="add-btn" aria-label="Add to cart">+</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- PRODUCT 6 -->
+    <article class="product" data-cats="holsters bestsellers" data-name="Sidewinder Belt Hidden Holster" data-price="69">
+      <div class="product-img-wrap">
+        <span class="product-tag bestseller">★ Best Seller</span>
+        <button class="wishlist-btn" aria-label="Wishlist">
+          <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg>
+        </button>
+        <div class="product-img product-img-primary" style="background-image:url('product-belt-hidden-holster.png');"></div>
+        <div class="product-img product-img-lifestyle" style="background-image:url('product-belt-hidden-holster-lifestyle.png');"></div>
+      </div>
+      <div class="product-info">
+        <div class="product-category">// Holsters · Concealed</div>
+        <div class="product-name">Sidewinder Belt Hidden Holster</div>
+        <div class="product-rating">
+          <span class="stars">★★★★★</span>
+          <span>4.9 · 287 reviews</span>
+        </div>
+        <div class="product-foot">
+          <div class="price"><span class="currency">$</span>69</div>
+          <button class="add-btn" aria-label="Add to cart">+</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- PRODUCT 7 -->
+    <article class="product" data-cats="carry" data-name="Highway Motorcycle Tail Bag" data-price="99">
+      <div class="product-img-wrap">
+        <span class="product-tag new">New</span>
+        <button class="wishlist-btn" aria-label="Wishlist">
+          <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg>
+        </button>
+        <div class="product-img product-img-primary" style="background-image:url('product-motorcycle-tail-bag.png');"></div>
+        <div class="product-img product-img-lifestyle" style="background-image:url('product-motorcycle-tail-bag-lifestyle.png');"></div>
+      </div>
+      <div class="product-info">
+        <div class="product-category">// Carry · Moto</div>
+        <div class="product-name">Highway Motorcycle Tail Bag</div>
+        <div class="product-rating">
+          <span class="stars">★★★★★</span>
+          <span>4.7 · 156 reviews</span>
+        </div>
+        <div class="product-foot">
+          <div class="price"><span class="currency">$</span>99</div>
           <button class="add-btn" aria-label="Add to cart">+</button>
         </div>
       </div>
@@ -1697,7 +1770,7 @@
       <div class="category-bg"></div>
       <div class="cat-icon"><svg viewBox="0 0 48 48"><path d="M8 28 L24 12 L40 28 L36 32 L24 22 L12 32 Z"/><path d="M8 38 L24 22 L40 38"/></svg></div>
       <div class="category-content">
-        <div class="category-count">01 PRODUCT</div>
+        <div class="category-count">02 PRODUCTS</div>
         <div class="category-name">Hunting</div>
       </div>
     </div>
@@ -1713,7 +1786,7 @@
       <div class="category-bg"></div>
       <div class="cat-icon"><svg viewBox="0 0 48 48"><path d="M12 16 V40 H36 V16"/><path d="M10 16 L24 6 L38 16"/><rect x="20" y="24" width="8" height="16"/></svg></div>
       <div class="category-content">
-        <div class="category-count">01 PRODUCT</div>
+        <div class="category-count">02 PRODUCTS</div>
         <div class="category-name">Off-Grid</div>
       </div>
     </div>
@@ -1721,7 +1794,7 @@
       <div class="category-bg"></div>
       <div class="cat-icon"><svg viewBox="0 0 48 48"><rect x="6" y="14" width="36" height="22" rx="1"/><rect x="14" y="20" width="20" height="10"/><line x1="14" y1="36" x2="14" y2="42"/><line x1="34" y1="36" x2="34" y2="42"/></svg></div>
       <div class="category-content">
-        <div class="category-count">04 PRODUCTS</div>
+        <div class="category-count">07 PRODUCTS</div>
         <div class="category-name">Every Day</div>
       </div>
     </div>
